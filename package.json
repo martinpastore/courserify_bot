@@ -1,0 +1,15 @@
+{
+  "name": "courserify_bot",
+  "version": "1.0.0",
+  "description": "Get free courses every day regarding your requirements",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Martin Pastore",
+  "license": "ISC",
+  "dependencies": {
+    "telegraf": "^3.35.0"
+  }
+}
