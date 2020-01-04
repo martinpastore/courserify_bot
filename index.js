@@ -1,4 +1,5 @@
 const Telegraf = require('telegraf');
+const Extra = require('telegraf/extra');
 const fetch = require('node-fetch');
 require('dotenv').config();
 
@@ -20,10 +21,32 @@ const findCourses = (ctx, query) => {
         if (resp.status !== 200 && resp.status !== 201) {
             handleError(ctx, resp.status)
         }
+
+        const message = {
+            title: resp.body.title,
+            url: resp.body.url,
+            rate: resp.body.avg_rate,
+            image: resp.body.image_50x50
+        }
+
+        ctx.replyWithPhoto(
+            message.image,
+            Extra.caption(`${getStars(message.rate)} - ${message.title}: ${message.url}`).markdown()
+        )
     })
     .catch(err => {
         ctx.reply("I didn't find related courses 😢");
     })
+}
+
+const getStars = (rate) => {
+    let stars = '';
+    
+    for(let i = 0; i < Math.floor(rate); i++) {
+        stars += '⭐';
+    }
+
+    return stars;
 }
 
 const handleError = (ctx, status) => {
