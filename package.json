@@ -10,6 +10,8 @@
   "author": "Martin Pastore",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^8.2.0",
+    "node-fetch": "^2.6.0",
     "telegraf": "^3.35.0"
   }
 }
