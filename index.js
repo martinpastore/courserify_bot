@@ -1,5 +1,6 @@
 const Telegraf = require('telegraf');
 const Extra = require('telegraf/extra');
+const Markup = require('telegraf/markup');
 const fetch = require('node-fetch');
 require('dotenv').config();
 
@@ -13,55 +14,37 @@ const findCourses = (ctx, query) => {
     fetch(`https://www.udemy.com/api-2.0/courses/?search=${query}&price=price-free&ratings=3`, {
         headers: {
             "Accept": "application/json, text/plain, */*",
-            "Authorization": "",
+            "Authorization": `Basic ${process.env.UDEMY_AUTHORIZATION}`,
             "Content-Type": "application/json;charset=utf-8"
         }
     })
-    .then(resp => {
-        if (resp.status !== 200 && resp.status !== 201) {
-            handleError(ctx, resp.status)
-        }
-
-        const message = {
-            title: resp.body.title,
-            url: resp.body.url,
-            rate: resp.body.avg_rate,
-            image: resp.body.image_50x50
-        }
-
-        ctx.replyWithPhoto(
-            message.image,
-            Extra.caption(`${getStars(message.rate)} - ${message.title}: ${message.url}`).markdown()
-        )
-    })
+    .then(response => response.json())
+    .then(resp => botResponse(ctx, resp))
     .catch(err => {
         ctx.reply("I didn't find related courses 😢");
     })
 }
 
-const getStars = (rate) => {
-    let stars = '';
-    
-    for(let i = 0; i < Math.floor(rate); i++) {
-        stars += '⭐';
+const botResponse = (ctx, resp) => {
+    if (!resp.results || !resp.results.length) {
+        ctx.reply(resp.detail);
     }
 
-    return stars;
+    const i = Math.floor(Math.random() * resp.results.length)
+    const message = getFormattedMessage(i, resp.results);
+
+    ctx.replyWithPhoto(
+        message.image,
+        Extra.caption(`${message.title}: https://udemy.com${message.url}`).markdown(),
+    )
 }
 
-const handleError = (ctx, status) => {
-    switch(status) {
-        case 403:
-        case 401:
-            ctx.reply("Looks like you don't have permissions to do this, send me an email 📲: martinpablopastore@gmail.com 👈")
-            break;
-        case 500:
-        case 400:
-        case 404:
-        case 502:
-            ctx.reply("I didn't find related courses 😢");
-            break;
-    }
+const getFormattedMessage = (i, results) => {
+    return {
+        title: results[i].title,
+        url: results[i].url,
+        image: results[i].image_480x270
+    };
 }
 
 bot.launch();
