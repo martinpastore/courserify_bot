@@ -4,7 +4,7 @@
   "description": "Get free courses every day regarding your requirements",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./index.js 0.0.0.0 3000",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Martin Pastore",
@@ -12,7 +12,6 @@
   "dependencies": {
     "dotenv": "^8.2.0",
     "node-fetch": "^2.6.0",
-    "nodemon": "^2.0.2",
     "telegraf": "^3.35.0"
   }
 }
