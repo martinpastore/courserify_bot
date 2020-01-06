@@ -10,7 +10,6 @@ bot.command('start', (ctx) => ctx.reply(`Hey ${ctx.from.first_name} 😍! What d
 bot.command('course', (ctx) => findCourses(ctx, ctx.message.text.replace('/course ', '')))
 
 const findCourses = (ctx, query) => {
-    ctx.reply('Buscando ⏳');
     fetch(`https://www.udemy.com/api-2.0/courses/?search=${query}&price=price-free&ratings=3`, {
         headers: {
             "Accept": "application/json, text/plain, */*",
