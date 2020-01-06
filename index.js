@@ -7,7 +7,10 @@ require('dotenv').config();
 const bot = new Telegraf(process.env.BOT_TOKEN)
 
 bot.command('start', (ctx) => ctx.reply(`Hey ${ctx.from.first_name} 😍! What do you want to learn today?? 📚`))
-bot.command('course', (ctx) => findCourses(ctx, ctx.message.text.replace('/course ', '')))
+bot.command('course', (ctx) => {
+    console.log(`${ctx.from.username} has requested: ${ctx.message.text.replace('/course ', '')}`)
+    findCourses(ctx, ctx.message.text.replace('/course ', ''))
+})
 
 const findCourses = (ctx, query) => {
     fetch(`https://www.udemy.com/api-2.0/courses/?search=${query}&price=price-free&ratings=3`, {
